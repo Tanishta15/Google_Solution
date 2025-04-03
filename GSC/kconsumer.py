@@ -11,7 +11,6 @@ consumer = KafkaConsumer(
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
 
-# Google AI Setup
 os.environ["GOOGLE_API_KEY"] = "AIzaSyDkXnTIKq6WNJscymGaWr9avzuD5p22DxA"
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
