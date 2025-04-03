@@ -6,7 +6,6 @@ cred = credentials.Certificate("/Users/tanishta/Desktop/GitHub/Google_Solution-1
 firebase_admin.initialize_app(cred, {
     'storageBucket': 'solution-4f24a.firebasestorage.app'
 })
-
 # Firestore Database
 db = firestore.client()
 
