@@ -3,7 +3,7 @@ import json
 import firebase_admin
 from firebase_admin import credentials, storage
 
-cred = credentials.Certificate("/Users/tanishta/Desktop/GitHub/Google_Solution-1/GSC/solution-4f24a-firebase-adminsdk-fbsvc-8d8a282892.json")  
+cred = credentials.Certificate("/Users/tanishta/Desktop/GitHub/solution-4f24a-firebase-adminsdk-fbsvc-8d8a282892.json")  
 firebase_admin.initialize_app(cred, {"storageBucket": "solution-4f24a.appspot.com"})
 
 producer = KafkaProducer(

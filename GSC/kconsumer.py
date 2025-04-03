@@ -62,3 +62,4 @@ for msg in consumer:
     # Store results in Firestore
     db.collection('scan_results').document(file_name).set(result)
     print(f"Scanned {file_name}: {result}")
+    
