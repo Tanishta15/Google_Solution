@@ -1,0 +1,22 @@
+CMD 1
+cd "C:\projects\kafka_2.12-3.6.2"
+
+bin\windows\zookeeper-server-start.bat config\zookeeper.properties
+
+CMD 2
+cd "C:\projects\kafka_2.12-3.6.2"
+
+bin\windows\kafka-server-start.bat config\server.properties
+
+CMD 3
+cd "C:\projects\kafka_2.12-3.6.2"
+bin\windows\kafka-topics.bat --create --topic test --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+
+
+bin\windows\kafka-topics.bat --create --topic content_stream --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+
+
+bin\windows\kafka-topics.bat --create --topic my_topic --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
+
+
+bin\windows\kafka-topics.bat --create --topic content_scan --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1
