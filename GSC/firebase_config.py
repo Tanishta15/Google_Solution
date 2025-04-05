@@ -11,3 +11,12 @@ db = firestore.client()
 
 # Firebase Storage
 bucket = storage.bucket()
+
+#uncomment if file upload is needed
+'''
+from firebase_admin import storage
+
+bucket = storage.bucket()
+blob = bucket.blob("sample.txt")
+blob.upload_from_filename("path_to_sample.txt")
+'''
