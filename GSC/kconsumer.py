@@ -9,7 +9,10 @@ from kafka import KafkaConsumer
 
 from firebase_config import db
 
+load_dotenv()
+
 FIREBASE_CREDENTIALS = os.getenv("FIREBASE_CREDENTIALS")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Path to your service account key
 KEY_PATH = rf"{FIREBASE_CREDENTIALS}"
@@ -23,8 +26,7 @@ language_client = language_v1.LanguageServiceClient(credentials=credentials)
 storage_client = storage.Client(credentials=credentials)
 
 # Set Gemini API key
-os.environ["GOOGLE_API_KEY"] = "enter gemini api key"
-genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
+genai.configure(api_key=GEMINI_API_KEY)
 
 
 def read_text_from_gcs(bucket_name, file_name):

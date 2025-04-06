@@ -1,13 +1,17 @@
 import logging
+import os
 
 import google.generativeai as genai
 import requests
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 from google.cloud import firestore
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 spark = (
     SparkSession.builder.appName("KafkaIntegration")
@@ -27,18 +31,17 @@ df.printSchema()
 
 df = df.selectExpr("CAST(value AS STRING) as content")
 
-# ✅ Initialize Google Gemini API
-genai.configure(api_key="AIzaSyDkXnTIKq6WNJscymGaWr9avzuD5p22DxA")
+genai.configure(api_key=GEMINI_API_KEY)
 
-# ✅ Initialize Firestore
+# Initialize Firestore
 db = firestore.Client()
 
-# ✅ Set up logging
+# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# 🔹 Fetch similar content using Google Gemini
+# Fetch similar content using Google Gemini
 def search_similar_content(text):
     try:
         model = genai.GenerativeModel("gemini-pro")
@@ -51,7 +54,7 @@ def search_similar_content(text):
         return []
 
 
-# 🔹 Extract text from a webpage
+# Extract text from a webpage
 def extract_text_from_url(url):
     try:
         response = requests.get(url, timeout=5)
@@ -63,7 +66,7 @@ def extract_text_from_url(url):
         return ""
 
 
-# 🔹 Check similarity using TF-IDF & Cosine Similarity
+# Check similarity using TF-IDF & Cosine Similarity
 def check_plagiarism(original_text, web_texts):
     try:
         all_texts = [original_text] + web_texts  # Combine original + fetched texts
@@ -78,7 +81,7 @@ def check_plagiarism(original_text, web_texts):
         return False, []
 
 
-# 🔹 Process text content
+# Process text content
 def process_content(content):
     try:
         # Step 1: Fetch similar content URLs
@@ -125,7 +128,7 @@ def foreach_batch_function(batch_df, batch_id):
         process_content(row.content)
 
 
-# ✅ Stream Processing (Using `foreachBatch()`)
+# Stream Processing (Using `foreachBatch()`)
 query = df.writeStream.foreachBatch(foreach_batch_function).start()
 
 query.awaitTermination()
