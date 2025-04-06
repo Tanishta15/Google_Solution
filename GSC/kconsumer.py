@@ -1,13 +1,18 @@
-from kafka import KafkaConsumer
 import json
-from google.cloud import vision, language_v1, storage
-import google.generativeai as genai
 import os
-from firebase_config import db
+
+import google.generativeai as genai
+from dotenv import load_dotenv
+from google.cloud import language_v1, storage, vision
 from google.oauth2 import service_account
+from kafka import KafkaConsumer
+
+from firebase_config import db
+
+FIREBASE_CREDENTIALS = os.getenv("FIREBASE_CREDENTIALS")
 
 # Path to your service account key
-KEY_PATH = r"C:\Users\Pradyu\Desktop\Projects\GSC\solution-4f24a-cd8ab2d840ce.json"
+KEY_PATH = rf"{FIREBASE_CREDENTIALS}"
 
 # Load credentials
 credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
@@ -21,10 +26,12 @@ storage_client = storage.Client(credentials=credentials)
 os.environ["GOOGLE_API_KEY"] = "enter gemini api key"
 genai.configure(api_key=os.environ["GOOGLE_API_KEY"])
 
+
 def read_text_from_gcs(bucket_name, file_name):
     bucket = storage_client.bucket(bucket_name)
     blob = bucket.blob(file_name)
     return blob.download_as_text()
+
 
 def interpret_sentiment(score):
     if score >= 0.6:
@@ -38,6 +45,7 @@ def interpret_sentiment(score):
     else:
         return "Very Negative"
 
+
 def scan_image(file_path):
     image = vision.Image()
     image.source.image_uri = file_path
@@ -50,27 +58,29 @@ def scan_image(file_path):
         "spoof": annotations.spoof.name,
         "medical": annotations.medical.name,
         "violence": annotations.violence.name,
-        "racy": annotations.racy.name
+        "racy": annotations.racy.name,
     }
 
+
 def scan_text(text):
-    document = language_v1.Document(content=text, type_=language_v1.Document.Type.PLAIN_TEXT)
+    document = language_v1.Document(
+        content=text, type_=language_v1.Document.Type.PLAIN_TEXT
+    )
     response = language_client.analyze_sentiment(document=document)
     score = response.document_sentiment.score
-    return {
-        "sentiment_score": score,
-        "sentiment_label": interpret_sentiment(score)
-    }
+    return {"sentiment_score": score, "sentiment_label": interpret_sentiment(score)}
+
 
 def scan_video(file_path):
     model = genai.GenerativeModel("gemini-1.5-pro")
     response = model.generate_content(["Analyze this video:", file_path])
     return {"video_analysis": response.text}
 
+
 consumer = KafkaConsumer(
-    'content_scan',
-    bootstrap_servers='localhost:9092',
-    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    "content_scan",
+    bootstrap_servers="localhost:9092",
+    value_deserializer=lambda x: json.loads(x.decode("utf-8")),
 )
 
 bucket_name = "solution-4f24a.firebasestorage.app"
@@ -78,17 +88,17 @@ bucket_name = "solution-4f24a.firebasestorage.app"
 for msg in consumer:
     file_info = msg.value
     print(f"Received message: {file_info}")
-    file_name = file_info['file_name']
-    
-    if file_name.endswith('.txt'):
+    file_name = file_info["file_name"]
+
+    if file_name.endswith(".txt"):
         text = read_text_from_gcs(bucket_name, file_name)
         result = scan_text(text)
-    
-    elif file_name.endswith(('.jpg', '.jpeg', '.png', '.bmp', '.webp')):
+
+    elif file_name.endswith((".jpg", ".jpeg", ".png", ".bmp", ".webp")):
         result = scan_image(f"gs://{bucket_name}/{file_name}")
-    
-    elif file_name.endswith('.mp4'):
+
+    elif file_name.endswith(".mp4"):
         result = scan_video(f"gs://{bucket_name}/{file_name}")
-    
-    db.collection('scan_results').document(file_name).set(result)
+
+    db.collection("scan_results").document(file_name).set(result)
     print(f"Scanned {file_name}: {result}")
