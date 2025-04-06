@@ -249,6 +249,19 @@ wheels = [
 ]
 
 [[package]]
+name = "flask-cors"
+version = "5.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "flask" },
+    { name = "werkzeug" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/32/d8/667bd90d1ee41c96e938bafe81052494e70b7abd9498c4a0215c103b9667/flask_cors-5.0.1.tar.gz", hash = "sha256:6ccb38d16d6b72bbc156c1c3f192bc435bfcc3c2bc864b2df1eb9b2d97b2403c", size = 11643 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/85/61/4aea5fb55be1b6f95e604627dc6c50c47d693e39cab2ac086ee0155a0abd/flask_cors-5.0.1-py3-none-any.whl", hash = "sha256:fa5cb364ead54bbf401a26dbf03030c6b18fb2fcaf70408096a572b409586b0c", size = 11296 },
+]
+
+[[package]]
 name = "google-ai-generativelanguage"
 version = "0.6.15"
 source = { registry = "https://pypi.org/simple" }
@@ -517,6 +530,7 @@ dependencies = [
     { name = "black" },
     { name = "firebase-admin" },
     { name = "flask" },
+    { name = "flask-cors" },
     { name = "google-cloud-firestore" },
     { name = "google-cloud-language" },
     { name = "google-cloud-storage" },
@@ -527,6 +541,7 @@ dependencies = [
     { name = "python-dotenv" },
     { name = "requests" },
     { name = "scikit-learn" },
+    { name = "vertexai" },
 ]
 
 [package.metadata]
@@ -535,6 +550,7 @@ requires-dist = [
     { name = "black", specifier = ">=25.1.0" },
     { name = "firebase-admin", specifier = ">=6.7.0" },
     { name = "flask", specifier = ">=3.1.0" },
+    { name = "flask-cors", specifier = ">=5.0.1" },
     { name = "google-cloud-firestore", specifier = ">=2.20.1" },
     { name = "google-cloud-language", specifier = ">=2.17.1" },
     { name = "google-cloud-storage", specifier = ">=3.1.0" },
@@ -545,6 +561,7 @@ requires-dist = [
     { name = "python-dotenv", specifier = ">=1.1.0" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "scikit-learn", specifier = ">=1.6.1" },
+    { name = "vertexai", specifier = ">=0.0.1" },
 ]
 
 [[package]]
@@ -1072,6 +1089,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/aa/63/e53da845320b757bf29ef6a9062f5c669fe997973f966045cb019c3f4b66/urllib3-2.3.0.tar.gz", hash = "sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d", size = 307268 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c8/19/4ec628951a74043532ca2cf5d97b7b14863931476d117c471e8e2b1eb39f/urllib3-2.3.0-py3-none-any.whl", hash = "sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df", size = 128369 },
+]
+
+[[package]]
+name = "vertexai"
+version = "0.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d9/c6/d5c1651731bfefc45e5af0e433941aa6d4fc18f02cb8e8a6be35ae3d7029/vertexai-0.0.1.tar.gz", hash = "sha256:5f485fa39684e3c2e8c68ba1ae57d163f8364d092ddd040bcd84d36f127b902a", size = 5572 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7a/c4/68c993f271d6bc53a7efac5733064cac6c3ab7145e609ce3a5e69dfbae66/vertexai-0.0.1-py3-none-any.whl", hash = "sha256:99e261af3b4d4e0a61eca346b668f7c52f0b47ceaaf4712093daff1790954790", size = 5988 },
 ]
 
 [[package]]
