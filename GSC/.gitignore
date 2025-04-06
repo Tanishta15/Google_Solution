@@ -1,4 +1,5 @@
 .env
 .venv
 solution-**.json
+__pycache__
 
