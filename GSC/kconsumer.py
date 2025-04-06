@@ -74,7 +74,7 @@ def scan_text(text):
 
 
 def scan_video(file_path):
-    model = genai.GenerativeModel("gemini-1.5-pro")
+    model = genai.GenerativeModel("models/gemini-1.5-pro-001")
     response = model.generate_content(["Analyze this video:", file_path])
     return {"video_analysis": response.text}
 
