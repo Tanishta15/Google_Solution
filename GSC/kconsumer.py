@@ -95,6 +95,15 @@ for msg in consumer:
     if file_name.endswith(".txt"):
         text = read_text_from_gcs(bucket_name, file_name)
         result = scan_text(text)
+    
+    elif file_name.endswith(".pdf"):
+        bucket = storage_client.bucket(bucket_name)
+        blob = bucket.blob(file_name)
+        pdf_bytes = blob.download_as_bytes()
+        text = pdf_bytes.decode('utf-8', errors='ignore')
+        result = scan_text(text)
+
+
 
     elif file_name.endswith((".jpg", ".jpeg", ".png", ".bmp", ".webp")):
         result = scan_image(f"gs://{bucket_name}/{file_name}")
