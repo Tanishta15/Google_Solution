@@ -9,10 +9,18 @@ from kafka import KafkaConsumer
 
 from firebase_config import db
 
-load_dotenv()
+# load_dotenv()
 
-FIREBASE_CREDENTIALS = os.getenv("FIREBASE_CREDENTIALS")
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+# FIREBASE_CREDENTIALS = os.getenv("FIREBASE_CREDENTIALS")
+# GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+from google.cloud import secretmanager
+
+client = secretmanager.SecretManagerServiceClient()
+firebase_secret = client.access_secret_version(
+    "projects/gsc-deployment/secrets/FIREBASE_CREDENTIALS/versions/latest"
+).payload.data.decode("utf-8")
+
 
 # Path to your service account key
 KEY_PATH = rf"{FIREBASE_CREDENTIALS}"
