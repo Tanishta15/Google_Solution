@@ -15,10 +15,14 @@ RUN pip install uv
 
 # Install Python dependencies using uv
 COPY pyproject.toml .
-RUN uv pip install -r pyproject.toml --system
+RUN uv venv
+RUN uv pip install firebase-admin
+RUN uv pip install -r pyproject.toml
+
+RUN sleep 10
 
 # Download and set up Kafka and Zookeeper
-RUN wget https://downloads.apache.org/kafka/3.7.2/kafka_2.12-3.7.2.tgz && \
+RUN wget https://downloads.apache.org/kafka/3.7.2/kafka_2.12-3.7.2.tgz -q && \
     tar -xzf kafka_2.12-3.7.2.tgz && \
     mv kafka_2.12-3.7.2 /opt/kafka && \
     rm kafka_2.12-3.7.2.tgz
@@ -35,6 +39,5 @@ CMD ["sh", "-c", "\
     sleep 5 && \
     /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties & \
     sleep 10 && \
-    python kconsumer.py & \
-    python kproducer.py \
-"]
+    .venv/bin/python kconsumer.py & \
+    .venv/bin/python kproducer.py"]

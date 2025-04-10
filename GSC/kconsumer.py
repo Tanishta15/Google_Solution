@@ -21,9 +21,12 @@ firebase_secret = client.access_secret_version(
     "projects/gsc-deployment/secrets/FIREBASE_CREDENTIALS/versions/latest"
 ).payload.data.decode("utf-8")
 
+gemini_secret = client.access_secret_version(
+    "projects/gsc-deployment/secrets/GEMINI_API_KEY/versions/latest"
+).payload.data.decode("utf-8")
 
 # Path to your service account key
-KEY_PATH = rf"{FIREBASE_CREDENTIALS}"
+KEY_PATH = rf"{firebase_secret}"
 
 # Load credentials
 credentials = service_account.Credentials.from_service_account_file(KEY_PATH)
@@ -34,7 +37,7 @@ language_client = language_v1.LanguageServiceClient(credentials=credentials)
 storage_client = storage.Client(credentials=credentials)
 
 # Set Gemini API key
-genai.configure(api_key=GEMINI_API_KEY)
+genai.configure(api_key=gemini_secret)
 
 
 def read_text_from_gcs(bucket_name, file_name):

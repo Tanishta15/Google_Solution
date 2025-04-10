@@ -9,17 +9,28 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from kafka import KafkaProducer
 
+
 load_dotenv()
+from google.cloud import secretmanager
+
+client = secretmanager.SecretManagerServiceClient()
+firebase_secret = client.access_secret_version(
+    "projects/gsc-deployment/secrets/FIREBASE_CREDENTIALS/versions/latest"
+).payload.data.decode("utf-8")
+
+gemini_secret = client.access_secret_version(
+    "projects/gsc-deployment/secrets/GEMINI_API_KEY/versions/latest"
+).payload.data.decode("utf-8")
 
 # Initialize Firebase Admin
-cred = credentials.Certificate(os.getenv("FIREBASE_CREDENTIALS"))
+cred = credentials.Certificate(firebase_secret)
 firebase_admin.initialize_app(
     cred,
     {"storageBucket": "solution-4f24a.firebasestorage.app"},
 )
 
 # Initialize Gemini API
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+genai.configure(api_key=gemini_secret)
 model = genai.GenerativeModel("gemini-1.5-pro-001")
 
 # Set up Kafka producer
